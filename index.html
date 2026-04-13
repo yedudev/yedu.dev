@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yedu Dev / Portfolio</title>
+  <style>
+    /* ========================================
+       CSS RESET & VARIABLES
+    ======================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --font: 'Helvetica Neue', Arial, sans-serif;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration: 0.6s;
+      --nav-height: 64px;
+      --max-width: 1200px;
+      --side-padding: clamp(20px, 5vw, 80px);
+    }
+
+    /* Dark theme (default) */
+    [data-theme="dark"] {
+      --bg: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --text-primary: #f0f0f0;
+      --text-secondary: #8a8a8a;
+      --text-tertiary: #555555;
+      --border: #222222;
+      --border-light: #1a1a1a;
+      --accent: #f0f0f0;
+      --tag-bg: #1a1a1a;
+      --tag-text: #8a8a8a;
+      --overlay-bg: rgba(10, 10, 10, 0.97);
+      --img-bg: #1a1a1a;
+    }
+
+    /* Light theme */
+    [data-theme="light"] {
+      --bg: #fafafa;
+      --bg-secondary: #f2f2f2;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f7f7f7;
+      --text-primary: #111111;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --border: #e0e0e0;
+      --border-light: #eeeeee;
+      --accent: #111111;
+      --tag-bg: #f0f0f0;
+      --tag-text: #666666;
+      --overlay-bg: rgba(250, 250, 250, 0.97);
+      --img-bg: #f0f0f0;
+    }
+
+    /* ========================================
+       BASE STYLES
+    ======================================== */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ========================================
+       NAVIGATION
+    ======================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--side-padding);
+      z-index: 1000;
+      background: transparent;
+      transition: background-color 0.3s var(--ease);
+    }
+
+    .nav.scrolled {
+      background: var(--overlay-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: opacity 0.3s var(--ease);
+      z-index: 1001;
+    }
+
+    .nav-logo:hover { opacity: 0.6; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      transition: color 0.3s var(--ease);
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text-primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--text-primary);
+      transition: width 0.3s var(--ease);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--ease);
+      flex-shrink: 0;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text-primary);
+      border-color: var(--text-tertiary);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.5s var(--ease-out);
+    }
+
+    .theme-toggle:hover svg {
+      transform: rotate(45deg);
+    }
+
+    [data-theme="dark"] .icon-light { display: block; }
+    [data-theme="dark"] .icon-dark { display: none; }
+    [data-theme="light"] .icon-light { display: none; }
+    [data-theme="light"] .icon-dark { display: block; }
+
+    /* Mobile menu */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text-primary);
+      transition: all 0.3s var(--ease);
+      position: relative;
+    }
+
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text-primary);
+      transition: all 0.3s var(--ease);
+    }
+
+    .menu-toggle span::before { top: -6px; }
+    .menu-toggle span::after { top: 6px; }
+
+    .menu-toggle.active span { background: transparent; }
+    .menu-toggle.active span::before { top: 0; transform: rotate(45deg); }
+    .menu-toggle.active span::after { top: 0; transform: rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease);
+    }
+
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu a {
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      transition: color 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+
+    .mobile-menu a:hover {
+      color: var(--text-primary);
+      transform: translateX(8px);
+    }
+
+    /* ========================================
+       PAGE CONTAINER & TRANSITIONS
+    ======================================== */
+    .page {
+      display: none;
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--duration) var(--ease-out), transform var(--duration) var(--ease-out);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       HERO SECTION
+    ======================================== */
+    .hero {
+      padding: calc(var(--nav-height) + 80px) var(--side-padding) 60px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .hero-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp 0.6s var(--ease-out) 0.1s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 5.5vw, 72px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 900px;
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s var(--ease-out) 0.2s forwards;
+    }
+
+    .hero-title strong {
+      font-weight: 500;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s var(--ease-out) 0.35s forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================
+       CASE STUDY CARDS
+    ======================================== */
+    .projects-section {
+      padding: 40px var(--side-padding) 120px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: background-color 0.4s var(--ease), transform 0.4s var(--ease);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .project-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out), background-color 0.4s var(--ease);
+    }
+
+    .project-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+    }
+
+    .project-card-image {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: var(--img-bg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-out);
+    }
+
+    .project-card:hover .project-card-image img {
+      transform: scale(1.03);
+    }
+
+    .project-card-image .placeholder-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 48px;
+      opacity: 0.3;
+    }
+
+    .project-card-content {
+      padding: 24px 28px 28px;
+    }
+
+    .project-card-title {
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .project-card-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .project-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-weight: 400;
+      transition: background-color 0.3s var(--ease);
+    }
+
+    /* Full-width card */
+    .project-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .project-card.full-width .project-card-image {
+      aspect-ratio: 21 / 9;
+    }
+
+    /* ========================================
+       CASE STUDY PAGE
+    ======================================== */
+    .case-hero {
+      padding: calc(var(--nav-height) + 80px) var(--side-padding) 60px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .case-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-bottom: 40px;
+      transition: color 0.3s var(--ease);
+      cursor: pointer;
+    }
+
+    .case-back:hover { color: var(--text-primary); }
+
+    .case-back svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s var(--ease);
+    }
+
+    .case-back:hover svg { transform: translateX(-4px); }
+
+    .case-hero-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .case-hero-subtitle {
+      font-size: clamp(16px, 1.8vw, 20px);
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
+    /* Case study metadata */
+    .case-meta {
+      padding: 48px var(--side-padding);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .case-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .case-meta-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      font-weight: 400;
+    }
+
+    .case-meta-value {
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    /* Case study image blocks */
+    .case-image {
+      padding: 60px var(--side-padding);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .case-image-block {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--img-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .case-image-full {
+      padding: 60px 0;
+    }
+
+    .case-image-full .case-image-block {
+      border-radius: 0;
+      aspect-ratio: 21 / 9;
+    }
+
+    /* Case content sections */
+    .case-content {
+      padding: 40px var(--side-padding) 60px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .case-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 60px;
+      padding: 60px 0;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .case-section:first-child {
+      border-top: none;
+    }
+
+    .case-section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      font-weight: 400;
+      padding-top: 4px;
+    }
+
+    .case-section-body h3 {
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .case-section-body p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .case-section-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Image grid in case study */
+    .case-image-grid {
+      padding: 20px var(--side-padding) 60px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .case-image-grid .case-image-block {
+      aspect-ratio: 4 / 3;
+    }
+
+    /* Next project link */
+    .next-project {
+      padding: 80px var(--side-padding);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.4s var(--ease);
+    }
+
+    .next-project:hover {
+      background: var(--bg-secondary);
+    }
+
+    .next-project-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+    }
+
+    .next-project-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      transition: opacity 0.3s var(--ease);
+    }
+
+    .next-project:hover .next-project-title {
+      opacity: 0.7;
+    }
+
+    .next-project-arrow {
+      margin-top: 20px;
+      display: inline-block;
+      transition: transform 0.3s var(--ease);
+    }
+
+    .next-project:hover .next-project-arrow {
+      transform: translateY(4px);
+    }
+
+    /* ========================================
+       ABOUT PAGE
+    ======================================== */
+    .about-content {
+      padding: calc(var(--nav-height) + 80px) var(--side-padding) 120px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: var(--img-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      position: sticky;
+      top: calc(var(--nav-height) + 40px);
+    }
+
+    .about-text h1 {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 32px;
+    }
+
+    .about-text h1 strong {
+      font-weight: 500;
+    }
+
+    .about-text p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .about-text .about-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      margin-top: 48px;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .about-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .about-links a {
+      font-size: 16px;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s var(--ease);
+    }
+
+    .about-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .about-links a svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.3s var(--ease);
+    }
+
+    .about-links a:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* ========================================
+       DESIGN ETHOS PAGE
+    ======================================== */
+    .design-content {
+      padding: calc(var(--nav-height) + 80px) var(--side-padding) 120px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .design-hero-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .design-hero-desc {
+      font-size: clamp(16px, 1.8vw, 20px);
+      color: var(--text-secondary);
+      font-weight: 300;
+      max-width: 700px;
+      line-height: 1.6;
+      margin-bottom: 80px;
+    }
+
+    .ethos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 48px 60px;
+    }
+
+    .ethos-item {
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .ethos-item h3 {
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .ethos-item p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ========================================
+       WRITING PAGE
+    ======================================== */
+    .writing-content {
+      padding: calc(var(--nav-height) + 80px) var(--side-padding) 120px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .writing-hero-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      margin-bottom: 60px;
+    }
+
+    .writing-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .writing-item {
+      display: grid;
+      grid-template-columns: 1fr 3fr 1fr;
+      gap: 32px;
+      align-items: baseline;
+      padding: 28px 0;
+      border-top: 1px solid var(--border-light);
+      cursor: pointer;
+      transition: opacity 0.3s var(--ease);
+    }
+
+    .writing-item:hover { opacity: 0.6; }
+
+    .writing-item:last-child {
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .writing-year {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .writing-title {
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .writing-type {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-align: right;
+    }
+
+    /* ========================================
+       FOOTER
+    ======================================== */
+    .footer {
+      padding: 48px var(--side-padding);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      transition: color 0.3s var(--ease);
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ========================================
+       SCROLL ANIMATIONS
+    ======================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+    @media (max-width: 900px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card.full-width .project-card-image {
+        aspect-ratio: 16 / 10;
+      }
+
+      .case-meta {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .case-section {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .case-image-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .about-photo {
+        position: static;
+        max-width: 300px;
+      }
+
+      .ethos-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .writing-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .writing-type { text-align: left; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .menu-toggle { display: flex; }
+
+      .hero-title {
+        font-size: clamp(28px, 8vw, 48px);
+      }
+
+      .case-meta {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .project-card-content {
+        padding: 20px;
+      }
+
+      .project-card-title {
+        font-size: 18px;
+      }
+
+      .footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+
+    /* ========================================
+       LOADING / PAGE TRANSITION
+    ======================================== */
+    .page-transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease);
+    }
+
+    .page-transition-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Smooth scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Transition Overlay -->
+  <div class="page-transition-overlay" id="pageTransition"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="mainNav">
+    <a class="nav-logo" onclick="navigate('home')">Yedu Dev</a>
+    <ul class="nav-links">
+      <li><a href="#" data-page="home" class="active" onclick="navigate('home'); return false;">Work</a></li>
+      <li><a href="#" data-page="design" onclick="navigate('design'); return false;">Design</a></li>
+      <li><a href="#" data-page="about" onclick="navigate('about'); return false;">About</a></li>
+      <li><a href="#" data-page="writing" onclick="navigate('writing'); return false;">Writing</a></li>
+      <li><button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button></li>
+    </ul>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="theme-toggle mobile-theme" onclick="toggleTheme()" aria-label="Toggle theme" style="display:none;">
+        <svg class="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#" onclick="navigate('home'); toggleMenu(); return false;">Work</a>
+    <a href="#" onclick="navigate('design'); toggleMenu(); return false;">Design</a>
+    <a href="#" onclick="navigate('about'); toggleMenu(); return false;">About</a>
+    <a href="#" onclick="navigate('writing'); toggleMenu(); return false;">Writing</a>
+  </div>
+
+  <!-- ============================
+       HOME PAGE
+  ============================ -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <p class="hero-label">Intro</p>
+      <h1 class="hero-title">Designing intuitive, scalable digital experiences that simplify complexity.</h1>
+      <p class="hero-subtitle">A UX Design Leader with 15+ years of experience across SaaS, enterprise, and AI-driven products working across research, strategy, and design to solve complex problems in a simple, human way. I also bring AI into my UX workflows using tools like Figma Make, ChatGPT, Claude, and Gemini to speed up ideation, streamline processes, and make better design decisions.</p>
+    </section>
+
+    <section class="projects-section">
+      <div class="projects-grid">
+
+        <!-- Project 1: Smart Mobility -->
+        <div class="project-card reveal" onclick="navigate('case-parking')">
+          <div class="project-card-image">
+            <div class="placeholder-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="project-card-content">
+            <h3 class="project-card-title">Self-parking cars.</h3>
+            <p class="project-card-desc">Building trust in autonomous valet parking through user research and interaction design.</p>
+            <div class="project-card-tags">
+              <span class="tag">UX Research</span>
+              <span class="tag">Interaction Design</span>
+              <span class="tag">Prototyping</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: Digital Mobility -->
+        <div class="project-card reveal" onclick="navigate('case-assistants')">
+          <div class="project-card-image">
+            <div class="placeholder-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="project-card-content">
+            <h3 class="project-card-title">Digital Mobility Assistants.</h3>
+            <p class="project-card-desc">Exploring the future of mobility and voice assistants for next-generation vehicles.</p>
+            <div class="project-card-tags">
+              <span class="tag">UX Strategy</span>
+              <span class="tag">Concept Development</span>
+              <span class="tag">Prototyping</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: Letters (full width) -->
+        <div class="project-card full-width reveal" onclick="navigate('case-letters')">
+          <div class="project-card-image">
+            <div class="placeholder-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="project-card-content">
+            <h3 class="project-card-title">Reinventing the letter.</h3>
+            <p class="project-card-desc">Designing digital services and UX strategies for public sector communication.</p>
+            <div class="project-card-tags">
+              <span class="tag">Service Design</span>
+              <span class="tag">UX Strategy</span>
+              <span class="tag">Public Sector</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: Voice -->
+        <div class="project-card reveal" onclick="navigate('case-voice')">
+          <div class="project-card-image">
+            <div class="placeholder-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </div>
+          </div>
+          <div class="project-card-content">
+            <h3 class="project-card-title">Voice experiences.</h3>
+            <p class="project-card-desc">Designing conversational interfaces and voice-first interactions for smart devices.</p>
+            <div class="project-card-tags">
+              <span class="tag">Voice UI</span>
+              <span class="tag">User Research</span>
+              <span class="tag">Prototyping</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 5: Experiments -->
+        <div class="project-card reveal" onclick="navigate('case-experiments')">
+          <div class="project-card-image">
+            <div class="placeholder-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="project-card-content">
+            <h3 class="project-card-title">Behaving expressions.</h3>
+            <p class="project-card-desc">An aesthetic exploration of shape-changing forms and the expressive richness of computational materials.</p>
+            <div class="project-card-tags">
+              <span class="tag">Research</span>
+              <span class="tag">Physical Computing</span>
+              <span class="tag">Exploration</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       CASE STUDY: SELF-PARKING
+  ============================ -->
+  <div class="page" id="page-case-parking">
+    <section class="case-hero">
+      <a class="case-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to work
+      </a>
+      <h1 class="case-hero-title reveal">Self-parking cars.</h1>
+      <p class="case-hero-subtitle reveal reveal-delay-1">Building trust in autonomous valet parking through qualitative research, interaction design, and iterative prototyping.</p>
+    </section>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Project hero image — Self-parking interface</div>
+    </div>
+
+    <div class="case-meta reveal">
+      <div class="case-meta-item">
+        <span class="case-meta-label">Client</span>
+        <span class="case-meta-value">Automotive Partner</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Year</span>
+        <span class="case-meta-value">2018 – 2019</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Role</span>
+        <span class="case-meta-value">Lead Designer</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Scope</span>
+        <span class="case-meta-value">UX Research, Interaction Design, Prototyping</span>
+      </div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Overview</div>
+        <div class="case-section-body">
+          <h3>Designing for trust in autonomous driving.</h3>
+          <p>Self-parking technology promises convenience, but the leap from manual to autonomous control requires deep trust. This project explored how interaction design can bridge that gap — making the handoff between driver and vehicle feel safe, transparent, and intuitive.</p>
+          <p>The goal was to design the end-to-end experience of an autonomous valet parking feature: activating it, leaving the car, monitoring the maneuver, and summoning the vehicle back.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Challenge</div>
+        <div class="case-section-body">
+          <h3>How do you hand control to a machine?</h3>
+          <p>Before starting the project, user journeys had been mapped through ethnographic study. A key challenge emerged: the in-car feature activation had to be crystal clear. Users needed to understand the system state at every moment — whether conditions were met, what the car intended to do, and how to intervene.</p>
+          <p>The activation flow required checking that conditions were met (car in park gear, brake released, no hands on steering wheel), allowing users to choose to stay in or leave the car, and requiring confirmation to start the maneuver once outside.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Process image — Workshop and research artifacts</div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Process</div>
+        <div class="case-section-body">
+          <h3>From scoping workshop to parking lot testing.</h3>
+          <p>The project kicked off with a three-day scoping workshop to narrow in on specific scope and define success criteria. From there, four one-hour qualitative sessions were conducted at an open, public parking lot.</p>
+          <p>Participants were walked through the full process of a self-parking car — activating it, leaving the car, monitoring it, and summoning it — and exposed to different, ambiguous prototypes to gauge reactions and uncover expectations.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Solution</div>
+        <div class="case-section-body">
+          <h3>Recognizable patterns that build confidence.</h3>
+          <p>The final design was derived from user tests and extensive discussions on using recognizable interaction patterns. Instead of inventing entirely new paradigms, the solution leveraged familiar UI conventions — adapted to the unique context of autonomous parking.</p>
+          <p>Clear system status indicators, step-by-step confirmation flows, and a persistent monitoring interface gave users the confidence to trust the vehicle. The design was demonstrated at CES 2019, featuring the autonomous valet parking solution along with concept videos and presentation material.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-image-grid reveal">
+      <div class="case-image-block">Solution detail — In-car activation screen</div>
+      <div class="case-image-block">Solution detail — Mobile monitoring view</div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Outcome</div>
+        <div class="case-section-body">
+          <h3>Presented on the world stage.</h3>
+          <p>The design solution was showcased at CES 2019 as part of the autonomous valet parking demonstration. The research findings informed not just the parking feature, but broader principles for human-autonomous vehicle interaction across the organization.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-project" onclick="navigate('case-assistants')">
+      <p class="next-project-label">Next Project</p>
+      <h2 class="next-project-title">Digital Mobility Assistants.</h2>
+      <div class="next-project-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       CASE STUDY: DIGITAL MOBILITY ASSISTANTS
+  ============================ -->
+  <div class="page" id="page-case-assistants">
+    <section class="case-hero">
+      <a class="case-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to work
+      </a>
+      <h1 class="case-hero-title reveal">Digital Mobility Assistants.</h1>
+      <p class="case-hero-subtitle reveal reveal-delay-1">Exploring the future of mobility and voice assistants for next-generation vehicles through strategic UX and concept development.</p>
+    </section>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Project hero image — Mobility assistant interface</div>
+    </div>
+
+    <div class="case-meta reveal">
+      <div class="case-meta-item">
+        <span class="case-meta-label">Client</span>
+        <span class="case-meta-value">Automotive Innovation Lab</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Year</span>
+        <span class="case-meta-value">2019 – 2021</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Role</span>
+        <span class="case-meta-value">UX Strategist</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Scope</span>
+        <span class="case-meta-value">UX Strategy, Concept Development, Prototyping</span>
+      </div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Overview</div>
+        <div class="case-section-body">
+          <h3>Reimagining the in-car experience.</h3>
+          <p>As vehicles evolve from transportation tools to digital platforms, the relationship between driver and car is fundamentally changing. This project explored how voice assistants and digital mobility services can create calmer, more mindful driving experiences.</p>
+          <p>The work spanned concept development for sustainable driving behavior apps, simplified interior concepts, and next-generation voice interaction paradigms.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Challenge</div>
+        <div class="case-section-body">
+          <h3>Complexity meets calm.</h3>
+          <p>Modern vehicles are packed with features, yet the driving experience should feel simple and focused. The challenge was designing digital assistants that enhance rather than distract — providing the right information at the right moment without overwhelming the driver.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-image-grid reveal">
+      <div class="case-image-block">Concept — Voice interaction flow</div>
+      <div class="case-image-block">Concept — Dashboard integration</div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Approach</div>
+        <div class="case-section-body">
+          <h3>From research to concept car.</h3>
+          <p>The team conducted extensive research into driver behavior, attention patterns, and the role of ambient information in vehicles. These insights shaped the design of a concept car focused on mindful driving — where technology recedes and the journey takes center stage.</p>
+          <p>Concepts ranged from apps encouraging sustainable driving habits to voice-first interfaces that minimize visual distraction while maximizing utility.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Outcome</div>
+        <div class="case-section-body">
+          <h3>A vision for the future of mobility.</h3>
+          <p>The project delivered a comprehensive UX strategy and set of design principles for next-generation in-car experiences. The concept car and accompanying research findings were presented to senior leadership, influencing the product roadmap for future vehicle models.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-project" onclick="navigate('case-letters')">
+      <p class="next-project-label">Next Project</p>
+      <h2 class="next-project-title">Reinventing the letter.</h2>
+      <div class="next-project-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       CASE STUDY: REINVENTING THE LETTER
+  ============================ -->
+  <div class="page" id="page-case-letters">
+    <section class="case-hero">
+      <a class="case-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to work
+      </a>
+      <h1 class="case-hero-title reveal">Reinventing the letter.</h1>
+      <p class="case-hero-subtitle reveal reveal-delay-1">Designing digital services and UX strategies that transform how citizens interact with public institutions.</p>
+    </section>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Project hero image — Digital letter concept</div>
+    </div>
+
+    <div class="case-meta reveal">
+      <div class="case-meta-item">
+        <span class="case-meta-label">Client</span>
+        <span class="case-meta-value">Public Sector</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Year</span>
+        <span class="case-meta-value">2016 – 2018</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Role</span>
+        <span class="case-meta-value">Service Designer</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Scope</span>
+        <span class="case-meta-value">Service Design, UX Strategy, User Research</span>
+      </div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Overview</div>
+        <div class="case-section-body">
+          <h3>Bridging institutions and citizens.</h3>
+          <p>Government communication can feel impersonal and confusing. This project reimagined the traditional letter — transforming dense, formal correspondence into clear, accessible digital experiences that respect citizens' time and cognitive load.</p>
+          <p>The work involved mapping the full communication journey, identifying pain points, and designing solutions that serve both institutional requirements and citizen needs.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Process</div>
+        <div class="case-section-body">
+          <h3>Understanding the system.</h3>
+          <p>Service blueprints and user journey maps revealed a web of interconnected touchpoints — from backend systems generating letters to the moment a citizen opens their digital mailbox. Each touchpoint was an opportunity to reduce friction and improve clarity.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-image-grid reveal">
+      <div class="case-image-block">Service blueprint detail</div>
+      <div class="case-image-block">Redesigned letter interface</div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Outcome</div>
+        <div class="case-section-body">
+          <h3>Clearer communication at scale.</h3>
+          <p>The redesigned digital letter system introduced structured content templates, plain language guidelines, and contextual help — making government communication more human. The framework was adopted across multiple agencies, improving comprehension rates and reducing support inquiries.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-project" onclick="navigate('case-voice')">
+      <p class="next-project-label">Next Project</p>
+      <h2 class="next-project-title">Voice experiences.</h2>
+      <div class="next-project-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       CASE STUDY: VOICE EXPERIENCES
+  ============================ -->
+  <div class="page" id="page-case-voice">
+    <section class="case-hero">
+      <a class="case-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to work
+      </a>
+      <h1 class="case-hero-title reveal">Voice experiences.</h1>
+      <p class="case-hero-subtitle reveal reveal-delay-1">Designing conversational interfaces and voice-first interactions for smart home devices and connected platforms.</p>
+    </section>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Project hero image — Voice interaction prototype</div>
+    </div>
+
+    <div class="case-meta reveal">
+      <div class="case-meta-item">
+        <span class="case-meta-label">Client</span>
+        <span class="case-meta-value">Smart Home Platform</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Year</span>
+        <span class="case-meta-value">2017 – 2018</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Role</span>
+        <span class="case-meta-value">UX Designer</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Scope</span>
+        <span class="case-meta-value">Voice UI, User Research, Workshop Facilitation, Prototyping</span>
+      </div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Overview</div>
+        <div class="case-section-body">
+          <h3>Conversations as interfaces.</h3>
+          <p>Voice interaction strips away visual scaffolding, leaving only the conversation. This project explored how to design voice experiences that feel natural, helpful, and trustworthy — from smart home control to proactive suggestions.</p>
+          <p>Working at the intersection of conversation design, technical constraints, and human expectations, the team designed and prototyped voice skills that bridged the gap between what people say and what they mean.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Outcome</div>
+        <div class="case-section-body">
+          <h3>Voice-first design principles.</h3>
+          <p>The project delivered a set of voice interaction design principles and reusable conversation patterns. These were applied across multiple voice skills, establishing a consistent and reliable voice experience for end users.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="next-project" onclick="navigate('case-experiments')">
+      <p class="next-project-label">Next Project</p>
+      <h2 class="next-project-title">Behaving expressions.</h2>
+      <div class="next-project-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       CASE STUDY: BEHAVING EXPRESSIONS
+  ============================ -->
+  <div class="page" id="page-case-experiments">
+    <section class="case-hero">
+      <a class="case-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to work
+      </a>
+      <h1 class="case-hero-title reveal">Behaving expressions.</h1>
+      <p class="case-hero-subtitle reveal reveal-delay-1">An aesthetic exploration of shape-changing forms and the expressive richness of computers as a material for design.</p>
+    </section>
+
+    <div class="case-image reveal">
+      <div class="case-image-block">Project hero image — Shape-changing form exploration</div>
+    </div>
+
+    <div class="case-meta reveal">
+      <div class="case-meta-item">
+        <span class="case-meta-label">Context</span>
+        <span class="case-meta-value">Research Project</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Year</span>
+        <span class="case-meta-value">2015 – 2016</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Role</span>
+        <span class="case-meta-value">Researcher & Designer</span>
+      </div>
+      <div class="case-meta-item">
+        <span class="case-meta-label">Scope</span>
+        <span class="case-meta-value">Physical Computing, Research, Exploration</span>
+      </div>
+    </div>
+
+    <div class="case-content">
+      <div class="case-section reveal">
+        <div class="case-section-label">Overview</div>
+        <div class="case-section-body">
+          <h3>When materials come alive.</h3>
+          <p>This research project explored the boundary between physical and digital, investigating how shape-changing interfaces can communicate emotion, state, and intention through movement alone. The work treated computation as a design material — something that can be molded, shaped, and given expressive behavior.</p>
+        </div>
+      </div>
+
+      <div class="case-section reveal">
+        <div class="case-section-label">Exploration</div>
+        <div class="case-section-body">
+          <h3>Movement as meaning.</h3>
+          <p>Through iterative prototyping with actuators, soft materials, and embedded sensors, the project produced a series of artifacts that express different emotional qualities through their physical behavior — from gentle breathing rhythms to sharp, attention-grabbing gestures.</p>
+          <p>The findings contributed to the growing field of shape-changing interfaces and offered new perspectives on how computational objects can relate to people on an emotional level.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-image-grid reveal">
+      <div class="case-image-block">Prototype — Breathing form</div>
+      <div class="case-image-block">Prototype — Responsive surface</div>
+    </div>
+
+    <div class="next-project" onclick="navigate('case-parking')">
+      <p class="next-project-label">Next Project</p>
+      <h2 class="next-project-title">Self-parking cars.</h2>
+      <div class="next-project-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       DESIGN ETHOS PAGE
+  ============================ -->
+  <div class="page" id="page-design">
+    <div class="design-content">
+      <h1 class="design-hero-title reveal">Design ethos.</h1>
+      <p class="design-hero-desc reveal reveal-delay-1">Great design solutions don't exist in isolation — they are part of larger systems. Understanding the full context, the people, their needs, and the environment they operate in is where meaningful design begins.</p>
+
+      <div class="ethos-grid">
+        <div class="ethos-item reveal">
+          <h3>Evidence-based design</h3>
+          <p>Design decisions grounded in data, research, and rational insights rather than intuition alone. Every choice answers a question, informs a decision, or validates an assumption.</p>
+        </div>
+        <div class="ethos-item reveal reveal-delay-1">
+          <h3>Calm technology</h3>
+          <p>The best design fades into the background, letting people focus on what matters. Technology should be a quiet enabler — seamless, intuitive, and unobtrusive.</p>
+        </div>
+        <div class="ethos-item reveal reveal-delay-2">
+          <h3>Systems thinking</h3>
+          <p>Using user journeys and service blueprints to map the interconnectedness of different parts of the system, creating cohesive experiences across physical and digital touchpoints.</p>
+        </div>
+        <div class="ethos-item reveal reveal-delay-3">
+          <h3>Experimentation</h3>
+          <p>Design as exploration. Prototyping quickly, testing assumptions, and iterating based on what's learned — embracing uncertainty as a path to better solutions.</p>
+        </div>
+        <div class="ethos-item reveal">
+          <h3>Collaboration</h3>
+          <p>The best work happens at the intersection of disciplines. Facilitating workshops, bridging engineering and design, and building shared understanding across teams.</p>
+        </div>
+        <div class="ethos-item reveal reveal-delay-1">
+          <h3>Leadership</h3>
+          <p>Guiding teams through ambiguity, establishing design processes, and creating the conditions where great work can emerge. Design leadership is about enabling others.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       ABOUT PAGE
+  ============================ -->
+  <div class="page" id="page-about">
+    <div class="about-content">
+      <div class="about-grid">
+        <div class="about-photo reveal">
+          Photo placeholder
+        </div>
+        <div class="about-text">
+          <h1 class="reveal"><strong>Yedu Dev</strong> is a product designer working at the intersection of research, strategy, and craft.</h1>
+          <p class="reveal reveal-delay-1">A creatively curious and strategic design leader with a background in UX strategy, ethnographic research, and physical-digital interaction design. Thriving in highly technical domains, helping teams tackle complex design problems, drive evidence-based decision-making, and create thoughtful interactive systems.</p>
+          <p class="reveal reveal-delay-2">Currently leading a team of interaction designers creating advanced features and driving projects from early research and exploration to delivering end-to-end design solutions.</p>
+          <p class="reveal reveal-delay-3">Previously explored the future of mobility and voice assistants, built concept cars for mindful driving, designed apps for sustainable behavior, and established design processes as the founding designer at a Bay Area satellite studio.</p>
+
+          <h4 class="about-section-title reveal">Get in touch</h4>
+          <div class="about-links reveal">
+            <a href="mailto:yedudev@gmail.com">
+              yedudev@gmail.com
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener">
+              LinkedIn
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================
+       WRITING PAGE
+  ============================ -->
+  <div class="page" id="page-writing">
+    <div class="writing-content">
+      <h1 class="writing-hero-title reveal">Talks &amp; writing.</h1>
+
+      <div class="writing-list">
+        <div class="writing-item reveal">
+          <span class="writing-year">2025</span>
+          <span class="writing-title">Designing for trust in autonomous systems</span>
+          <span class="writing-type">Talk</span>
+        </div>
+        <div class="writing-item reveal reveal-delay-1">
+          <span class="writing-year">2024</span>
+          <span class="writing-title">Evidence-based design in complex domains</span>
+          <span class="writing-type">Article</span>
+        </div>
+        <div class="writing-item reveal reveal-delay-2">
+          <span class="writing-year">2023</span>
+          <span class="writing-title">The role of calm technology in modern interfaces</span>
+          <span class="writing-type">Talk</span>
+        </div>
+        <div class="writing-item reveal reveal-delay-3">
+          <span class="writing-year">2022</span>
+          <span class="writing-title">From research to product: bridging the gap</span>
+          <span class="writing-type">Workshop</span>
+        </div>
+        <div class="writing-item reveal">
+          <span class="writing-year">2021</span>
+          <span class="writing-title">Systems thinking for interaction designers</span>
+          <span class="writing-type">Article</span>
+        </div>
+        <div class="writing-item reveal reveal-delay-1">
+          <span class="writing-year">2019</span>
+          <span class="writing-title">Designing voice-first experiences</span>
+          <span class="writing-type">Talk</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-left">&copy; 2026 Yedu Dev</div>
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:yedudev@gmail.com">Email</a>
+      </div>
+    </footer>
+  </div>
+
+
+  <!-- ============================
+       JAVASCRIPT
+  ============================ -->
+  <script>
+    // ---- State ----
+    let currentPage = 'home';
+
+    // ---- Theme Toggle ----
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch(e) {}
+    }
+
+    // Restore saved theme (default: light)
+    try {
+      const saved = localStorage.getItem('theme');
+      document.documentElement.setAttribute('data-theme', saved || 'light');
+    } catch(e) {}
+
+    // ---- Navigation ----
+    function navigate(page) {
+      if (page === currentPage) return;
+
+      const overlay = document.getElementById('pageTransition');
+      overlay.classList.add('active');
+
+      setTimeout(() => {
+        // Hide current
+        const currentEl = document.getElementById('page-' + currentPage);
+        if (currentEl) {
+          currentEl.classList.remove('visible');
+          currentEl.classList.remove('active');
+        }
+
+        // Show new
+        currentPage = page;
+        const newEl = document.getElementById('page-' + page);
+        if (newEl) {
+          newEl.classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'instant' });
+
+          // Re-run reveal animations
+          resetReveals(newEl);
+
+          requestAnimationFrame(() => {
+            newEl.classList.add('visible');
+            overlay.classList.remove('active');
+            observeReveals();
+          });
+        }
+
+        // Update nav active state
+        updateNavActive(page);
+
+        // Update URL hash
+        history.pushState(null, '', page === 'home' ? '#' : '#' + page);
+      }, 300);
+    }
+
+    function updateNavActive(page) {
+      document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+        a.classList.remove('active');
+        // "Work" is active for home and case study pages
+        if (a.dataset.page === 'home' && (page === 'home' || page.startsWith('case-'))) {
+          a.classList.add('active');
+        } else if (a.dataset.page === page) {
+          a.classList.add('active');
+        }
+      });
+    }
+
+    function resetReveals(container) {
+      container.querySelectorAll('.reveal').forEach(el => {
+        el.classList.remove('in-view');
+      });
+    }
+
+    // ---- Mobile Menu ----
+    function toggleMenu() {
+      const toggle = document.getElementById('menuToggle');
+      const menu = document.getElementById('mobileMenu');
+      toggle.classList.toggle('active');
+      menu.classList.toggle('open');
+      document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    // ---- Scroll Observer for Reveals ----
+    let observer;
+
+    function observeReveals() {
+      if (observer) observer.disconnect();
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -60px 0px'
+      });
+
+      document.querySelectorAll('.page.active .reveal:not(.in-view), .page.active .project-card:not(.in-view)').forEach(el => {
+        observer.observe(el);
+      });
+    }
+
+    // ---- Nav scroll effect ----
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('mainNav');
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // ---- Mobile theme button visibility ----
+    function handleResize() {
+      const mobileTheme = document.querySelector('.mobile-theme');
+      if (window.innerWidth <= 640) {
+        mobileTheme.style.display = 'flex';
+      } else {
+        mobileTheme.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    // ---- Hash Routing ----
+    function handleHash() {
+      const hash = location.hash.slice(1) || 'home';
+      if (hash !== currentPage) {
+        // Direct set without animation on initial load
+        const currentEl = document.getElementById('page-' + currentPage);
+        if (currentEl) {
+          currentEl.classList.remove('visible', 'active');
+        }
+
+        currentPage = hash;
+        const newEl = document.getElementById('page-' + hash);
+        if (newEl) {
+          newEl.classList.add('active');
+          requestAnimationFrame(() => {
+            newEl.classList.add('visible');
+            observeReveals();
+          });
+        }
+        updateNavActive(hash);
+      }
+    }
+
+    window.addEventListener('hashchange', handleHash);
+
+    // ---- Init ----
+    document.addEventListener('DOMContentLoaded', () => {
+      // Handle initial hash
+      const hash = location.hash.slice(1);
+      if (hash && hash !== 'home') {
+        const homeEl = document.getElementById('page-home');
+        homeEl.classList.remove('active');
+
+        currentPage = hash;
+        const targetEl = document.getElementById('page-' + hash);
+        if (targetEl) {
+          targetEl.classList.add('active');
+          requestAnimationFrame(() => {
+            targetEl.classList.add('visible');
+            observeReveals();
+          });
+        }
+        updateNavActive(hash);
+      } else {
+        // Show home
+        const homeEl = document.getElementById('page-home');
+        requestAnimationFrame(() => {
+          homeEl.classList.add('visible');
+          observeReveals();
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
